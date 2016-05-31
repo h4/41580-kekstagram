@@ -76,12 +76,6 @@
      */
     _resizeConstraint: null,
 
-    _drawCanvasDots: function(ctx, x, y, radius) {
-      ctx.fillStyle = 'yellow';
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, 2 * Math.PI);
-      ctx.fill();
-    },
     /**
      * Отрисовка канваса.
      */
@@ -126,29 +120,24 @@
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
-      var dotRadius = 5,
-        x = -this._resizeConstraint.side / 2,
-        y = -this._resizeConstraint.side / 2;
-      for (; x < this._resizeConstraint.side / 2; x += (dotRadius + 10)) {
-        this._drawCanvasDots(this._ctx, x / 2, y, 5);
-      }
-
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
       // следующий кадр рисовался с привычной системой координат, где точка
       // 0 0 находится в левом верхнем углу холста, в противном случае
       // некорректно сработает даже очистка холста или нужно будет использовать
       // сложные рассчеты для координат прямоугольника, который нужно очистить.
-      this._ctx.restore();
+
 
       this._ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-      this._ctx.rect(0, 0, 480, 360);
-      this._ctx.rect(100, 40, 273, 280);
-      this._ctx.fill('evenodd');
+      this._ctx.rect(displX, displY, this._container.width, this._container.height);
 
+      this._ctx.rect(-this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2, this._resizeConstraint.side, this._resizeConstraint.side);
+      this._ctx.fill('evenodd');
       this._ctx.font = '12px Tahoma';
+
       this._ctx.fillStyle = 'white';
-      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalWidth, 215, 35);
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalWidth, -25, -this._resizeConstraint.side / 2 - 15);
+      this._ctx.restore();
     },
 
     /**
